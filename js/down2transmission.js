@@ -6,8 +6,8 @@
 // @icon http://pics.smotri.com/cskins/blue/smiles/bt.gif
 // @license https://raw.githubusercontent.com/coderant/down2transmission/master/LICENSE
 // @encoding utf-8
-// @version 1.1.1
-// @description Add a button in some private tracker sites to support adding torrent to Transmission. Current support CCF and TTG.
+// @version 1.1.2
+// @description Add a button in torrent sites to support adding torrent to Transmission directly.
 // @supportURL https://github.com/coderant/down2transmission
 // @updateURL https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
 // @downloadURL https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
@@ -141,7 +141,7 @@ console.log("Constructed url:" + rpc_url);
         resultText.text("Submitting to Transmission...");
         console.log(id + " is clicked");
         var request;
-        if (type.includes("ccf-main"||"ttg-main")) {
+        if (type.includes("ccf-main") || type.includes("ttg-main")) {
             console.log("main page");
             var torrentPage = $(this).data('detailurl');
             GM_xmlhttpRequest({
@@ -160,7 +160,7 @@ console.log("Constructed url:" + rpc_url);
                 }
             });
         }
-        if (type.includes("ccf-detail"||"ttg-detail")) {
+        if (type.includes("ccf-detail") || type.includes("ttg-detail")) {
             console.log("detail page");
             var torrentURL = baseURL + "/" + $('a[class="index"][href*=".torrent"]').attr('href');
             request = {arguments: {cookies: getCookie(), filename: torrentURL}, method: "torrent-add", tag: 80};
