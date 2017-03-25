@@ -1,4 +1,4 @@
-# pt2transmission
+# down2transmission
 
 Add a button in some private tracker site to support adding torrent to Transmission. 
 

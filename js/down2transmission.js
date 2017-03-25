@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         pt2transmission
+// @name         down2transmission
 // @namespace    https://github.com/coderant/
-// @version      0.0.1
+// @version      0.0.2
 // @description  Add a button in some private tracker site to support adding torrent to Transmission. Current support CCF and TTG.
-// @supportURL   https://github.com/coderant/pt2transmission
-// @updateURL    https://raw.githubusercontent.com/coderant/pt2transmission/master/js/pt2transmission.js
+// @supportURL   https://github.com/coderant/down2transmission
+// @updateURL    https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
 // @author       Muffin_C
 // @match        *://ccfbits.org/*
 // @match        *://totheglory.im/*
@@ -80,10 +80,10 @@ console.log("Constructed url:" + rpc_url);
             target = $('tr[id]> td:nth-child(2)');
             target.each(function (i) {
                 var page = $(this).find("a[href]").attr("href");
-                var el = $('<a>', {id: "transmission_" + i, rel: baseURL + page, text: "Transmission"});
+                var el = $('<a>', {id: "transmission_main_" + i, rel: baseURL + page, text: "Transmission"});
                 el.css(buttonCSS);
                 $(this).append(el);
-                el.after($('<a>', {id: "transmission_" + i + "_result", text: "", style: "padding-left:5px"}));
+                el.after($('<a>', {id: "transmission_main_" + i + "_result", text: "", style: "padding-left:5px"}));
             });
         }
         if (site.includes("/t/")) {
@@ -100,6 +100,8 @@ console.log("Constructed url:" + rpc_url);
     $('[id^=transmission]:not([id*=result]').click(function () {
         var torrentPage = $(this).attr('rel');
         var id = $(this).attr('id');
+        var resultText = $("#" + id + "_result");
+        resultText.text("Submitting to Transmission...");
         console.log(id + " is clicked");
         if (id.includes("main")) {
             GM_xmlhttpRequest({
@@ -122,7 +124,7 @@ console.log("Constructed url:" + rpc_url);
         if (id.includes("detail")) {
             var torrentURL = baseURL + "/" + $('a[class="index"][href*=".torrent"]').attr('href');
             var request = {arguments: {cookies: getCookie(), filename: torrentURL}, method: "torrent-add", tag: 80};
-            addTorrent($("#" + id), $("#" + id + "_result"), request);
+            addTorrent($("#" + id), resultText, request);
         }
     });
 })();
