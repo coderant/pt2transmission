@@ -6,7 +6,7 @@
 // @icon http://pics.smotri.com/cskins/blue/smiles/bt.gif
 // @license https://raw.githubusercontent.com/coderant/down2transmission/master/LICENSE
 // @encoding utf-8
-// @version 0.0.2
+// @version 0.0.3
 // @description Add a button in some private tracker sites to support adding torrent to Transmission. Current support CCF and TTG.
 // @supportURL https://github.com/coderant/down2transmission
 // @updateURL https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
