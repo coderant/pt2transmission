@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         p2transmission
+// @name         pt2transmission
 // @namespace    bigly.Muffin.C
 // @version      0.0.1
 // @description  Add a button in some private tracker site to support adding torrent to Transmission. Current support CCF and TTG.
