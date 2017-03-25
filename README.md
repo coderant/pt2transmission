@@ -1,7 +1,7 @@
 # down2transmission
 
 ## Introduction
-Add a button in some private tracker site to support adding torrent to Transmission. 
+Add a button in torrent sites to support adding torrent to Transmission directly. 
 
 ## Images
 <img src="https://raw.githubusercontent.com/coderant/down2transmission/master/resource/img/main_page.jpg" width="300">
