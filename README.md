@@ -28,3 +28,5 @@ var transmission_rpc_bind_address = "/transmission/";
 var username = "your_username";
 var pw = "your_password";
 ```
+
+Tested with Tampermonkey on Chrome, macOS.

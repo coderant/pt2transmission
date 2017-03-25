@@ -7,7 +7,7 @@
 // @license https://raw.githubusercontent.com/coderant/down2transmission/master/LICENSE
 // @encoding utf-8
 // @version 0.0.2
-// @description Add a button in some private tracker site to support adding torrent to Transmission. Current support CCF and TTG.
+// @description Add a button in some private tracker sites to support adding torrent to Transmission. Current support CCF and TTG.
 // @supportURL https://github.com/coderant/down2transmission
 // @updateURL https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
 // @downloadURL https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
