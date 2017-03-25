@@ -8,10 +8,8 @@ If you want more pt sites supported, send me an invite :P
 
 Screen shots:
 
-[[https://github.com/coderant/repository/blob/master/img/main_page.jpg|alt=main_page]]
-[[https://github.com/coderant/repository/blob/master/img/detail_page.jpg|alt=detail_page]]
-[[https://github.com/coderant/repository/blob/master/img/added.jpg|alt=added]]
-
+![main_page](https://raw.githubusercontent.com/coderant/down2transmission/master/resource/img/main_page.jpg)
+![added](https://raw.githubusercontent.com/coderant/down2transmission/master/resource/img/added.jpg)
 
 Edit below in script before use.
 
