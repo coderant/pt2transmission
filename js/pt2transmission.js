@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         pt2transmission
-// @namespace    bigly.Muffin.C
+// @namespace    https://github.com/coderant/
 // @version      0.0.1
 // @description  Add a button in some private tracker site to support adding torrent to Transmission. Current support CCF and TTG.
 // @supportURL   https://github.com/coderant/pt2transmission
+// @updateURL    https://raw.githubusercontent.com/coderant/pt2transmission/master/js/pt2transmission.js
 // @author       Muffin_C
 // @match        *://ccfbits.org/*
 // @match        *://totheglory.im/*
@@ -12,6 +13,7 @@
 // @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
+// Edit these before use.
 // http://192.168.1.1 for local access, input ddns for external access.
 // NO trailing slash(/).
 var transmission_url = "http://your.url.here";
@@ -38,13 +40,13 @@ console.log("Constructed url:" + rpc_url);
     var baseURL = document.location.origin;
     var target;
     var buttonCSS = {
-        'background-color': '#00a2ff',
+        'background-color': '#B6B6B6',
         '-moz-border-radius': '2px',
         '-webkit-border-radius': '2px',
         'border-radius': '2px',
         'display': 'inline-block',
         'cursor': 'pointer',
-        'color': '#ffffff',
+        'color': '#000000',
         'font-family': 'Verdana',
         'font-size': '12px',
         'padding': '2px 5px',
@@ -198,10 +200,10 @@ function addTorrent(button, result, request, sessionId, tries) {
                 button.css("cursor", "default");
             }
             if (success) {
-                button.css("background-color", "green");
+                button.css("background-color", "#8FFFA6");
             }
             if (error) {
-                button.css("background-color", "red");
+                button.css("background-color", "#FFBAC2");
             }
         }
     });
