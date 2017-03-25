@@ -6,7 +6,7 @@
 // @icon http://pics.smotri.com/cskins/blue/smiles/bt.gif
 // @license https://raw.githubusercontent.com/coderant/down2transmission/master/LICENSE
 // @encoding utf-8
-// @version 0.0.3
+// @version 1.1.0
 // @description Add a button in some private tracker sites to support adding torrent to Transmission. Current support CCF and TTG.
 // @supportURL https://github.com/coderant/down2transmission
 // @updateURL https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
@@ -42,6 +42,7 @@ console.log("Constructed url:" + rpc_url);
     var site = window.location.href;
     var reCCF = /ccf/i;
     var reTTG = /totheglory/i;
+    var rePira = /thepiratebay.org/i;
     var baseURL = document.location.origin;
     var target;
     var buttonCSS = {
@@ -60,55 +61,88 @@ console.log("Constructed url:" + rpc_url);
 
     if (reCCF.test(site)) {
         if (site.includes("browse")) {
+            // CCF main page
             target = $('table[border=1][cellpadding=5]>>> td:nth-child(2):not([class])');
             target.each(function (i) {
                 var pageURL = baseURL + "/" + $(this).find("a[title][href]").attr("href");
-                var el = $('<a>', {id: "transmission_main_" + i, rel: pageURL, text: "Transmission"});
-                el.css(buttonCSS);
-                $(this).append(el);
-                el.after($('<a>', {id: "transmission_main_" + i + "_result", text: "", style: "padding-left:5px"}));
+                var button = $('<a>', {id: "transmission_" + i, "data-detailurl": pageURL, text: "Transmission", "data-type": "ccf-main"});
+                var resultText = $('<a>', {id: "transmission_" + i + "_result", text: "", style: "padding-left:5px", "data-type": "ccf-main"});
+                button.css(buttonCSS);
+                $(this).append(button);
+                button.after(resultText);
             });
         }
         if (site.includes("details")) {
+            // CCF detail page
             target = $('a[class="index"][href*=".torrent"]');
             var ccfTorrentUrl = baseURL + "/" + target.attr("href");
-            var ccfDetailInsert = $('<a>', {id: "transmission_detail", rel: ccfTorrentUrl, text: "Transmission"});
+            var ccfDetailInsert = $('<a>', {id: "transmission", "data-detailurl": ccfTorrentUrl, text: "Transmission", "data-type": "ccf-detail"});
             ccfDetailInsert.css(buttonCSS);
             target.after(ccfDetailInsert);
-            ccfDetailInsert.after($('<a>', {id: "transmission_detail_result", text: "", style: "padding-left:5px"}));
+            ccfDetailInsert.after($('<a>', {id: "transmission_result", text: "", style: "padding-left:5px", "data-type": "ccf-detail"}));
             target.after("<br>");
         }
     }
 
     if (reTTG.test(site)) {
         if (site.includes("browse")) {
+            // TTG main page
             target = $('tr[id]> td:nth-child(2)');
             target.each(function (i) {
                 var page = $(this).find("a[href]").attr("href");
-                var el = $('<a>', {id: "transmission_main_" + i, rel: baseURL + page, text: "Transmission"});
+                var el = $('<a>', {id: "transmission_" + i, "data-detailurl": baseURL + page, text: "Transmission", "data-type": "ttg-main"});
                 el.css(buttonCSS);
                 $(this).append(el);
-                el.after($('<a>', {id: "transmission_main_" + i + "_result", text: "", style: "padding-left:5px"}));
+                el.after($('<a>', {id: "transmission_" + i + "_result", text: "", style: "padding-left:5px", "data-type": "ttg-main"}));
             });
         }
         if (site.includes("/t/")) {
+            // TTG detail page
             target = $('a[class="index"][href*=".zip"]');
             var ttgTorrentUrl = baseURL + "/" + $('a[class="index"][href*=".torrent"]').attr("href");
-            var ttgDetailInsert = $('<a>', {id: "transmission_detail", rel: ttgTorrentUrl, text: "Transmission"});
+            var ttgDetailInsert = $('<a>', {id: "transmission", "data-detailurl": ttgTorrentUrl, text: "Transmission", "data-type": "ttg-detail"});
             ttgDetailInsert.css(buttonCSS);
             target.after(ttgDetailInsert);
-            ttgDetailInsert.after($('<a>', {id: "transmission_detail_result", text: "", style: "padding-left:5px"}));
+            ttgDetailInsert.after($('<a>', {id: "transmission_result", text: "", style: "padding-left:5px", "data-type": "ttg-detail"}));
             target.after("<br>");
         }
     }
 
+    if (rePira.test(site)) {
+        if (site.includes("/search/")) {
+            // piratebay main page
+            target = $('#searchResult> tbody td:nth-child(2)');
+            target.each(function (i) {
+                var pageURL = baseURL + "/" + $(this).find("a[title][href]").attr("href");
+                var el = $('<a>', {id: "transmission_" + i, "data-detailurl": pageURL, text: "Transmission", "data-type": "pira-main"});
+                el.css(buttonCSS);
+                $(this).append(el);
+                el.after($('<a>', {id: "transmission_" + i + "_result", text: "", style: "padding-left:5px", "data-type": "pira-main"}));
+                el.before("<br>");
+            });
+        }
+        // if (site.includes("/torrent/")) {
+        //     // piratebay detail page
+        //     target = $('.download:first> a');
+        //     var ccfTorrentUrl = baseURL + "/" + target.attr("href");
+        //     var ccfDetailInsert = $('<a>', {id: "transmission_piradetail", "data-detailurl": ccfTorrentUrl, text: "Transmission"});
+        //     ccfDetailInsert.css(buttonCSS);
+        //     target.after(ccfDetailInsert);
+        //     ccfDetailInsert.after($('<a>', {id: "transmission_piradetail_result", text: "", style: "padding-left:5px"}));
+        //     target.after("<br>");
+        // }
+    }
+
     $('[id^=transmission]:not([id*=result]').click(function () {
-        var torrentPage = $(this).attr('rel');
         var id = $(this).attr('id');
+        var type = $(this).data("type");
         var resultText = $("#" + id + "_result");
         resultText.text("Submitting to Transmission...");
         console.log(id + " is clicked");
-        if (id.includes("main")) {
+        var request;
+        if (type.includes("ccf-main"||"ttg-main")) {
+            console.log("main page");
+            var torrentPage = $(this).data('detailurl');
             GM_xmlhttpRequest({
                 method: "GET",
                 url: torrentPage,
@@ -121,14 +155,20 @@ console.log("Constructed url:" + rpc_url);
                         method: "torrent-add",
                         tag: 80
                     };
-                    console.log("Clicked:" + id);
-                    addTorrent($("#" + id), $("#" + id + "_result"), request);
+                    addTorrent($("#" + id), resultText, request);
                 }
             });
         }
-        if (id.includes("detail")) {
+        if (type.includes("ccf-detail"||"ttg-detail")) {
+            console.log("detail page");
             var torrentURL = baseURL + "/" + $('a[class="index"][href*=".torrent"]').attr('href');
-            var request = {arguments: {cookies: getCookie(), filename: torrentURL}, method: "torrent-add", tag: 80};
+            request = {arguments: {cookies: getCookie(), filename: torrentURL}, method: "torrent-add", tag: 80};
+            addTorrent($("#" + id), resultText, request);
+        }
+        if (type.includes("pira-main")) {
+            console.log("pira-main page");
+            var magnet_link = $(this).siblings().filter('a[href^="magnet"]').attr('href');
+            request = {arguments: {cookies: getCookie(), filename: magnet_link}, method: "torrent-add", tag: 80};
             addTorrent($("#" + id), resultText, request);
         }
     });

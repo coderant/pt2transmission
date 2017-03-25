@@ -1,19 +1,35 @@
 # down2transmission
 
+## Introduction
 Add a button in some private tracker site to support adding torrent to Transmission. 
 
-Current support CCF and TTG.
+## Images
+<img src="https://raw.githubusercontent.com/coderant/down2transmission/master/resource/img/main_page.jpg" width="300">
+<img src="https://raw.githubusercontent.com/coderant/down2transmission/master/resource/img/added.jpg" width="300">
+<img src="https://raw.githubusercontent.com/coderant/down2transmission/master/resource/img/duplicate.jpg" width="300">
 
-If you want more pt sites supported, send me an invite :P
+## Supported sites:
+```
+ccfbits
+- http://ccfbits.org/browse.php
+- http://ccfbits.org/details.php
 
-Screen shots:
+totheglory
+- https://totheglory.im/browse.php
+- https://totheglory.im/t/
 
-![main_page](https://raw.githubusercontent.com/coderant/down2transmission/master/resource/img/main_page.jpg)
-![added](https://raw.githubusercontent.com/coderant/down2transmission/master/resource/img/added.jpg)
+piratebay
+- https://thepiratebay.org/search/
+```
 
+Open an issue or pull request if you want more sites supported.
+
+If it's an private site(I don't have access), you better send me an invite. ;P
+
+## Usage
 Edit below in script before use.
 
-```
+```javascript
 // http://192.168.1.1 for local access, input ddns for external access.
 // NO trailing slash(/).
 var transmission_url = "http://your.url.here";
@@ -29,4 +45,5 @@ var username = "your_username";
 var pw = "your_password";
 ```
 
+## Environment
 Tested with Tampermonkey on Chrome, macOS.
