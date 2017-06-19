@@ -148,14 +148,22 @@ console.log("Constructed url:" + rpc_url);
                 method: "GET",
                 url: torrentPage,
                 onload: function (response) {
-                    // console.log("Start fetching torrent details");
-                    var torrentURL = baseURL + "/" + $(response.responseText).find('a[href*=".torrent"]').attr('href');
-                    // console.log("Extracted torrent url: " + torrentURL);
+                    console.log("Start fetching torrent details");
+                    var torrentURL;
+                    if (type.includes("ccf-main")) {
+                        torrentURL = baseURL + "/" + $(response.responseText).find('a[href*=".torrent"]').attr('href');
+                    }
+
+                    if (type.includes("ttg-main")) {
+                        torrentURL = $(response.responseText).find('td.heading:contains(种子链接)').next().children("a:first").attr("href");
+                    }
+                    console.log("Extracted torrent url: " + torrentURL);
                     var request = {
                         arguments: {cookies: getCookie(), filename: torrentURL},
                         method: "torrent-add",
                         tag: 80
                     };
+                    console.log("request: " + request);
                     addTorrent($("#" + id), resultText, request);
                 }
             });
