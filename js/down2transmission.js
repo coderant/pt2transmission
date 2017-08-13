@@ -6,7 +6,7 @@
 // @icon http://pics.smotri.com/cskins/blue/smiles/bt.gif
 // @license https://raw.githubusercontent.com/coderant/down2transmission/master/LICENSE
 // @encoding utf-8
-// @version 1.1.3
+// @version 1.1.4
 // @description Add a button in torrent sites to support adding torrent to Transmission directly.
 // @supportURL https://github.com/coderant/down2transmission
 // @updateURL https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
@@ -203,7 +203,7 @@ function addTorrent(button, result, request, sessionId, tries) {
             "X-Transmission-Session-Id": sessionId
         },
         onload: function (response) {
-            console.log([
+            console.log("Got response:\n" + [
                 response.status,
                 response.statusText,
                 response.responseText
@@ -234,10 +234,12 @@ function addTorrent(button, result, request, sessionId, tries) {
                     error = true;
                     break;
                 case 409:
+                    console.log("Setting sessionId");
                     var headers = response.responseHeaders.split("\n");
+                    console.log(headers.join("; "));
                     for (var i in headers) {
                         var header = headers[i].split(":");
-                        if (header[0] == "X-Transmission-Session-Id") {
+                        if (header[0].toLowerCase() == "x-transmission-session-id") {
                             sessionId = header[1].trim();
                             console.log("Got new Session ID: (" + sessionId);
                             addTorrent(button, result, request, sessionId, tries + 1);
