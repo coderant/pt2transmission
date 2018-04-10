@@ -142,7 +142,7 @@ console.log("Constructed url:" + rpc_url);
     if (reIpt.test(site)) {
         if (site.includes("/t")) {
             // main page
-            target = $('td:has(> a[class="b"])');
+            target = $('td:has(> div.ar)');
             target.each(function (i) {
                 var torrentURL = baseURL + $(this).parent().find("a:has(i.fa-download)").attr("href") + "?torrent_pass=" + ipt_torrent_pass;
                 var el = $('<a>', {id: "transmission_" + i, "data-detailurl": torrentURL, text: "Transmission", "data-type": "ipt-main"});
