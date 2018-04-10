@@ -1,7 +1,7 @@
 # down2transmission
 
 ## Introduction
-Add a button in torrent sites to support adding torrent to Transmission directly. 
+Add a button in torrent sites to support adding torrent to Transmission directly.
 
 ## Images
 <img src="https://raw.githubusercontent.com/coderant/down2transmission/master/resource/img/main_page.jpg" width="300">
@@ -20,6 +20,9 @@ totheglory
 
 piratebay
 - https://thepiratebay.org/search/
+
+iptorrent
+- https://iptorrents.com/t?q=
 ```
 
 Open an issue or pull request if you want more sites supported.
@@ -43,6 +46,9 @@ var transmission_rpc_bind_address = "/transmission/";
 // Authentication;
 var username = "your_username";
 var pw = "your_password";
+
+// Can be found in direct download rss.
+var ipt_torrent_pass = "your_ipt_torrent_pass";
 ```
 
 ## Environment

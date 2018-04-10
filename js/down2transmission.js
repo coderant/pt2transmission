@@ -6,7 +6,7 @@
 // @icon http://pics.smotri.com/cskins/blue/smiles/bt.gif
 // @license https://raw.githubusercontent.com/coderant/down2transmission/master/LICENSE
 // @encoding utf-8
-// @version 1.1.4
+// @version 1.1.5
 // @description Add a button in torrent sites to support adding torrent to Transmission directly.
 // @supportURL https://github.com/coderant/down2transmission
 // @updateURL https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
