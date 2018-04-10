@@ -14,6 +14,7 @@
 // @match *://ccfbits.org/*
 // @match *://totheglory.im/*
 // @match *://thepiratebay.org/*
+// @match *://iptorrents.com/*
 // @require https://code.jquery.com/jquery-3.2.1.min.js
 // @run-at document-end
 // @grant GM_xmlhttpRequest
@@ -34,6 +35,9 @@ var transmission_rpc_bind_address = "/transmission/";
 var username = "your_username";
 var pw = "your_password";
 
+// Can be found in direct download rss.
+var ipt_torrent_pass = "your_ipt_torrent_pass";
+
 // DO NOT EDIT BELOW.
 var rpc_url = transmission_url + ":" + transmission_port + transmission_rpc_bind_address + "rpc";
 console.log("Constructed url:" + rpc_url);
@@ -44,6 +48,7 @@ console.log("Constructed url:" + rpc_url);
     var reCCF = /ccf/i;
     var reTTG = /totheglory/i;
     var rePira = /thepiratebay.org/i;
+    var reIpt = /iptorrents.com/i;
     var baseURL = document.location.origin;
     var target;
     var buttonCSS = {
@@ -134,6 +139,21 @@ console.log("Constructed url:" + rpc_url);
         // }
     }
 
+    if (reIpt.test(site)) {
+        if (site.includes("/t")) {
+            // main page
+            target = $('td:has(> a[class="b"])');
+            target.each(function (i) {
+                var torrentURL = baseURL + $(this).parent().find("a:has(i.fa-download)").attr("href") + "?torrent_pass=" + ipt_torrent_pass;
+                var el = $('<a>', {id: "transmission_" + i, "data-detailurl": torrentURL, text: "Transmission", "data-type": "ipt-main"});
+                el.css(buttonCSS);
+                $(this).append(el);
+                el.after($('<a>', {id: "transmission_" + i + "_result", text: "", style: "padding-left:5px", "data-type": "ipt-main"}));
+                el.before("<br>");
+            });
+        }
+    }
+
     $('[id^=transmission]:not([id*=result]').click(function () {
         var id = $(this).attr('id');
         var type = $(this).data("type");
@@ -178,6 +198,12 @@ console.log("Constructed url:" + rpc_url);
             console.log("pira-main page");
             var magnet_link = $(this).siblings().filter('a[href^="magnet"]').attr('href');
             request = {arguments: {cookies: getCookie(), filename: magnet_link}, method: "torrent-add", tag: 80};
+            addTorrent($("#" + id), resultText, request);
+        }
+        if (type.includes("ipt-main")) {
+            console.log("ipt-main");
+            torrentURL = $(this).data('detailurl');
+            request = {arguments: {cookies: getCookie(), filename: torrentURL}, method: "torrent-add", tag: 80};
             addTorrent($("#" + id), resultText, request);
         }
     });
