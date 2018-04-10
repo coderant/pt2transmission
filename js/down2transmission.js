@@ -158,6 +158,7 @@ console.log("Constructed url:" + rpc_url);
         var id = $(this).attr('id');
         var type = $(this).data("type");
         var resultText = $("#" + id + "_result");
+        var torrentURL;
         resultText.text("Submitting to Transmission...");
         console.log(id + " is clicked");
         var request;
@@ -169,7 +170,6 @@ console.log("Constructed url:" + rpc_url);
                 url: torrentPage,
                 onload: function (response) {
                     console.log("Start fetching torrent details");
-                    var torrentURL;
                     if (type.includes("ccf-main")) {
                         torrentURL = baseURL + "/" + $(response.responseText).find('a[href*=".torrent"]').attr('href');
                     }
@@ -190,14 +190,14 @@ console.log("Constructed url:" + rpc_url);
         }
         if (type.includes("ccf-detail") || type.includes("ttg-detail")) {
             console.log("detail page");
-            var torrentURL = baseURL + "/" + $('a[class="index"][href*=".torrent"]').attr('href');
+            torrentURL = baseURL + "/" + $('a[class="index"][href*=".torrent"]').attr('href');
             request = {arguments: {cookies: getCookie(), filename: torrentURL}, method: "torrent-add", tag: 80};
             addTorrent($("#" + id), resultText, request);
         }
         if (type.includes("pira-main")) {
             console.log("pira-main page");
-            var magnet_link = $(this).siblings().filter('a[href^="magnet"]').attr('href');
-            request = {arguments: {cookies: getCookie(), filename: magnet_link}, method: "torrent-add", tag: 80};
+            torrentURL = $(this).siblings().filter('a[href^="magnet"]').attr('href');
+            request = {arguments: {cookies: getCookie(), filename: torrentURL}, method: "torrent-add", tag: 80};
             addTorrent($("#" + id), resultText, request);
         }
         if (type.includes("ipt-main")) {
