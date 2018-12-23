@@ -6,7 +6,7 @@
 // @icon http://pics.smotri.com/cskins/blue/smiles/bt.gif
 // @license https://raw.githubusercontent.com/coderant/down2transmission/master/LICENSE
 // @encoding utf-8
-// @version 1.1.9
+// @version 1.1.10
 // @description Add a button in torrent sites to support adding torrent to Transmission directly.
 // @supportURL https://github.com/coderant/down2transmission
 // @updateURL https://raw.githubusercontent.com/coderant/down2transmission/master/js/down2transmission.js
@@ -41,6 +41,7 @@ var ipt_torrent_pass = "your_ipt_torrent_pass";
 // DO NOT EDIT BELOW.
 var rpc_url = transmission_url + ":" + transmission_port + transmission_rpc_bind_address + "rpc";
 console.log("Constructed url:" + rpc_url);
+var $ = window.jQuery;
 
 (function () {
     'use strict';
@@ -104,7 +105,7 @@ console.log("Constructed url:" + rpc_url);
         }
         if (site.includes("/t/")) {
             // TTG detail page
-            target = $('a[class="index"][href*=".zip"]');
+            target = $('a[class="index"][href*="zip"]');
             var ttgTorrentUrl = baseURL + "/" + $('a[class="index"][href*=".torrent"]').attr("href");
             var ttgDetailInsert = $('<a>', {id: "transmission", "data-detailurl": ttgTorrentUrl, text: "Transmission", "data-type": "ttg-detail"});
             ttgDetailInsert.css(buttonCSS);
@@ -190,7 +191,7 @@ console.log("Constructed url:" + rpc_url);
         }
         if (type.includes("ccf-detail") || type.includes("ttg-detail")) {
             console.log("detail page");
-            torrentURL = baseURL + "/" + $('a[class="index"][href*=".torrent"]').attr('href');
+            torrentURL = baseURL + "/" + $('a[class="index"]:contains("torrent")').attr('href');
             request = {arguments: {cookies: getCookie(), filename: torrentURL}, method: "torrent-add", tag: 80};
             addTorrent($("#" + id), resultText, request);
         }
@@ -244,9 +245,9 @@ function addTorrent(button, result, request, sessionId, tries) {
                     var rpcJSON = JSON.parse(rpcResponse);
                     if (rpcJSON.result.toLowerCase() === "success") {
                         if ("torrent-duplicate" in rpcJSON.arguments) {
-                            resultText = "Already added: " + rpcJSON['arguments']['torrent-duplicate'].name;
+                            resultText = "Already added: " + rpcJSON.arguments['torrent-duplicate'].name;
                         } else {
-                            resultText = "Added: " + rpcJSON['arguments']['torrent-added'].name;
+                            resultText = "Added: " + rpcJSON.arguments['torrent-added'].name;
                         }
                         success = true;
                     } else {
