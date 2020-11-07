@@ -6,7 +6,7 @@
 // @icon https://media.giphy.com/media/cInsPcO4MijtwP1FMS/giphy.gif
 // @license https://raw.githubusercontent.com/convexshiba/down2transmission/master/LICENSE
 // @encoding utf-8
-// @version 1.3
+// @version 1.4
 // @description Add a button in torrent sites to support adding torrent to Transmission directly.
 // @supportURL https://github.com/convexshiba/down2transmission
 // @updateURL https://raw.githubusercontent.com/convexshiba/down2transmission/master/js/down2transmission.js
@@ -42,7 +42,7 @@ var transmissions = [
     "/transmission/",
     "usename2",
     "pw2"
-  )
+  ),
 ];
 
 // Can be found in direct download rss.
@@ -56,12 +56,12 @@ function Transmission(server_name, url, port, rpc_bind_address, username, pw) {
   this.rpc_bind_address = rpc_bind_address;
   this.username = username;
   this.pw = pw;
-  this.rpc_url = function() {
+  this.rpc_url = function () {
     return this.url + ":" + this.port + this.rpc_bind_address + "rpc";
   };
 }
 
-var transmissions_map = transmissions.reduce(function(transmissions_map, obj) {
+var transmissions_map = transmissions.reduce(function (transmissions_map, obj) {
   transmissions_map[obj.name] = obj;
   return transmissions_map;
 }, {});
@@ -89,13 +89,13 @@ var buttonCSS = {
   "font-size": "12px",
   padding: "3px 5px 3px 3px",
   margin: "3px",
-  "text-decoration": "none"
+  "text-decoration": "none",
 };
 
-(function() {
+(function () {
   "use strict";
   transmissions.forEach(addButtonForTransmissioin);
-  $("[id^=transmission]:not([id*=result]").click(function() {
+  $("[id^=transmission]:not([id*=result]").click(function () {
     var id = $(this).attr("id");
     var type = $(this).data("type");
     var resultText = $("#" + id + "_result");
@@ -110,15 +110,13 @@ var buttonCSS = {
       GM_xmlhttpRequest({
         method: "GET",
         url: torrentPage,
-        onload: function(response) {
+        onload: function (response) {
           console.log("Start fetching torrent details");
           if (type.includes("ccf-main")) {
             torrentURL =
               baseURL +
               "/" +
-              $(response.responseText)
-                .find('a[href*=".torrent"]')
-                .attr("href");
+              $(response.responseText).find('a[href*=".torrent"]').attr("href");
           }
 
           if (type.includes("ttg-main")) {
@@ -132,11 +130,11 @@ var buttonCSS = {
           var request = {
             arguments: { cookies: getCookie(), filename: torrentURL },
             method: "torrent-add",
-            tag: 80
+            tag: 80,
           };
           console.log("request: " + request);
           addTorrent(transmission, $("#" + id), resultText, request);
-        }
+        },
       });
     }
     if (type.includes("ccf-detail") || type.includes("ttg-detail")) {
@@ -146,20 +144,17 @@ var buttonCSS = {
       request = {
         arguments: { cookies: getCookie(), filename: torrentURL },
         method: "torrent-add",
-        tag: 80
+        tag: 80,
       };
       addTorrent(transmission, $("#" + id), resultText, request);
     }
     if (type.includes("pira-main")) {
       console.log("pira-main page");
-      torrentURL = $(this)
-        .siblings()
-        .filter('a[href^="magnet"]')
-        .attr("href");
+      torrentURL = $(this).siblings().filter('a[href^="magnet"]').attr("href");
       request = {
         arguments: { cookies: getCookie(), filename: torrentURL },
         method: "torrent-add",
-        tag: 80
+        tag: 80,
       };
       addTorrent(transmission, $("#" + id), resultText, request);
     }
@@ -169,7 +164,7 @@ var buttonCSS = {
       request = {
         arguments: { cookies: getCookie(), filename: torrentURL },
         method: "torrent-add",
-        tag: 80
+        tag: 80,
       };
       addTorrent(transmission, $("#" + id), resultText, request);
     }
@@ -187,26 +182,22 @@ function addButtonForTransmissioin(transmission) {
       target = $(
         "table[border=1][cellpadding=5]>>> td:nth-child(2):not([class])"
       );
-      target.each(function(i) {
+      target.each(function (i) {
         var pageURL =
-          baseURL +
-          "/" +
-          $(this)
-            .find("a[title][href]")
-            .attr("href");
+          baseURL + "/" + $(this).find("a[title][href]").attr("href");
         var button = $("<a>", {
           id: "transmission_" + transmission.name + i,
           "data-detailurl": pageURL,
           text: transmission.name,
           "data-type": "ccf-main",
-          "data-server-name": transmission.name
+          "data-server-name": transmission.name,
         });
         var resultText = $("<a>", {
           id: "transmission_" + transmission.name + i + "_result",
           text: "",
           style: "padding-left:5px",
           "data-type": "ccf-main",
-          "data-server-name": transmission.name
+          "data-server-name": transmission.name,
         });
         button.css(buttonCSS);
         $(this).append(button);
@@ -222,7 +213,7 @@ function addButtonForTransmissioin(transmission) {
         "data-detailurl": ccfTorrentUrl,
         text: transmission.name,
         "data-type": "ccf-detail",
-        "data-server-name": transmission.name
+        "data-server-name": transmission.name,
       });
       ccfDetailInsert.css(buttonCSS);
       target.after(ccfDetailInsert);
@@ -232,7 +223,7 @@ function addButtonForTransmissioin(transmission) {
           text: "",
           style: "padding-left:5px",
           "data-type": "ccf-detail",
-          "data-server-name": transmission.name
+          "data-server-name": transmission.name,
         })
       );
       target.after("<br>");
@@ -243,16 +234,14 @@ function addButtonForTransmissioin(transmission) {
     if (site.includes("browse")) {
       // TTG main page
       target = $("tr[id]> td:nth-child(2)");
-      target.each(function(i) {
-        var page = $(this)
-          .find("a[href]")
-          .attr("href");
+      target.each(function (i) {
+        var page = $(this).find("a[href]").attr("href");
         var el = $("<a>", {
           id: "transmission_" + transmission.name + i,
           "data-detailurl": baseURL + page,
           text: transmission.name,
           "data-type": "ttg-main",
-          "data-server-name": transmission.name
+          "data-server-name": transmission.name,
         });
         el.css(buttonCSS);
         $(this).append(el);
@@ -262,7 +251,7 @@ function addButtonForTransmissioin(transmission) {
             text: "",
             style: "padding-left:5px",
             "data-type": "ttg-main",
-            "data-server-name": transmission.name
+            "data-server-name": transmission.name,
           })
         );
       });
@@ -277,7 +266,7 @@ function addButtonForTransmissioin(transmission) {
         "data-detailurl": ttgTorrentUrl,
         text: transmission.name,
         "data-type": "ttg-detail",
-        "data-server-name": transmission.name
+        "data-server-name": transmission.name,
       });
       ttgDetailInsert.css(buttonCSS);
       target.after(ttgDetailInsert);
@@ -287,7 +276,7 @@ function addButtonForTransmissioin(transmission) {
           text: "",
           style: "padding-left:5px",
           "data-type": "ttg-detail",
-          "data-server-name": transmission.name
+          "data-server-name": transmission.name,
         })
       );
       target.after("<br>");
@@ -298,19 +287,15 @@ function addButtonForTransmissioin(transmission) {
     if (site.includes("/search/")) {
       // piratebay main page
       target = $("#searchResult> tbody td:nth-child(2)");
-      target.each(function(i) {
+      target.each(function (i) {
         var pageURL =
-          baseURL +
-          "/" +
-          $(this)
-            .find("a[title][href]")
-            .attr("href");
+          baseURL + "/" + $(this).find("a[title][href]").attr("href");
         var el = $("<a>", {
           id: "transmission_" + transmission.name + i,
           "data-detailurl": pageURL,
           text: transmission.name,
           "data-type": "pira-main",
-          "data-server-name": transmission.name
+          "data-server-name": transmission.name,
         });
         el.css(buttonCSS);
         $(this).append(el);
@@ -320,7 +305,7 @@ function addButtonForTransmissioin(transmission) {
             text: "",
             style: "padding-left:5px",
             "data-type": "pira-main",
-            "data-server-name": transmission.name
+            "data-server-name": transmission.name,
           })
         );
         el.before("<br>");
@@ -331,14 +316,11 @@ function addButtonForTransmissioin(transmission) {
   if (reIpt.test(site)) {
     if (site.includes("/t")) {
       // main page
-      target = $("td:has(> div.ar)");
-      target.each(function(i) {
+      target = $("td:has(> div.sub)");
+      target.each(function (i) {
         var torrentURL =
           baseURL +
-          $(this)
-            .parent()
-            .find("a:has(i.fa-download)")
-            .attr("href") +
+          $(this).parent().find("a:has(i.fa-download)").attr("href") +
           "?torrent_pass=" +
           ipt_torrent_pass;
         var el = $("<a>", {
@@ -346,7 +328,7 @@ function addButtonForTransmissioin(transmission) {
           "data-detailurl": torrentURL,
           text: transmission.name,
           "data-type": "ipt-main",
-          "data-server-name": transmission.name
+          "data-server-name": transmission.name,
         });
         el.css(buttonCSS);
         $(this).append(el);
@@ -356,7 +338,7 @@ function addButtonForTransmissioin(transmission) {
             text: "",
             style: "padding-left:5px",
             "data-type": "ipt-main",
-            "data-server-name": transmission.name
+            "data-server-name": transmission.name,
           })
         );
         el.before("<br>");
@@ -385,9 +367,9 @@ function addTorrent(transmission, button, result, request, sessionId, tries) {
     url: transmission.rpc_url(),
     data: JSON.stringify(request),
     headers: {
-      "X-Transmission-Session-Id": sessionId
+      "X-Transmission-Session-Id": sessionId,
     },
-    onload: function(response) {
+    onload: function (response) {
       console.log(
         "Got response:\n" +
           [response.status, response.statusText, response.responseText].join(
@@ -462,7 +444,7 @@ function addTorrent(transmission, button, result, request, sessionId, tries) {
       if (error) {
         button.css("background-color", "#FFBAC2");
       }
-    }
+    },
   });
 }
 
