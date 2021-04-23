@@ -57,7 +57,7 @@ function Transmission(server_name, url, port, rpc_bind_address, username, pw) {
   this.username = username;
   this.pw = pw;
   this.rpc_url = function () {
-    return this.url + ":" + this.port + this.rpc_bind_address + "rpc";
+    return "http://" + this.username + ":" + this.pw + "@" + this.url + ":" + this.port + this.rpc_bind_address + "rpc";
   };
 }
 
@@ -160,6 +160,16 @@ var buttonCSS = {
     }
     if (type.includes("ipt-main")) {
       console.log("ipt-main");
+      torrentURL = $(this).data("detailurl");
+      request = {
+        arguments: { cookies: getCookie(), filename: torrentURL },
+        method: "torrent-add",
+        tag: 80,
+      };
+      addTorrent(transmission, $("#" + id), resultText, request);
+    }
+    if (type.includes("ipt-detail")) {
+      console.log("ipt-detail");
       torrentURL = $(this).data("detailurl");
       request = {
         arguments: { cookies: getCookie(), filename: torrentURL },
@@ -314,7 +324,36 @@ function addButtonForTransmissioin(transmission) {
   }
 
   if (reIpt.test(site)) {
-    if (site.includes("/t")) {
+    if (site.includes("/torrent.php")) {
+      // torrent detail page
+      target = $("td:has(> div.sub)");
+      target.each(function (i) {
+        var torrentURL =
+          baseURL +
+          $(this).parent().find("a:has(i.fa-download)").parent().attr("href") +
+          "?torrent_pass=" +
+          ipt_torrent_pass;
+        var el = $("<a>", {
+          id: "transmission_" + transmission.name + i,
+          "data-detailurl": torrentURL,
+          text: transmission.name,
+          "data-type": "ipt-detail",
+          "data-server-name": transmission.name,
+        });
+        el.css(buttonCSS);
+        $(this).append(el);
+        el.after(
+          $("<a>", {
+            id: "transmission_" + transmission.name + i + "_result",
+            text: "",
+            style: "padding-left:5px",
+            "data-type": "ipt-main",
+            "data-server-name": transmission.name,
+          })
+        );
+        el.before("<br>");
+      });
+    } else if (site.includes("/t")) {
       // main page
       target = $("td:has(> div.sub)");
       target.each(function (i) {
@@ -362,8 +401,6 @@ function addTorrent(transmission, button, result, request, sessionId, tries) {
   console.log("sending: " + JSON.stringify(request));
   GM_xmlhttpRequest({
     method: "POST",
-    user: transmission.username,
-    password: transmission.pw,
     url: transmission.rpc_url(),
     data: JSON.stringify(request),
     headers: {
