@@ -5,7 +5,7 @@
 // @author convexshiba
 // @icon https://media.giphy.com/media/cInsPcO4MijtwP1FMS/giphy.gif
 // @license https://raw.githubusercontent.com/convexshiba/down2transmission/master/LICENSE
-// @version 1.6
+// @version 1.7
 // @description Add a button in torrent sites to support adding torrent to Transmission directly.
 // @supportURL https://github.com/convexshiba/down2transmission
 // @updateURL https://raw.githubusercontent.com/convexshiba/down2transmission/master/js/down2transmission.js
@@ -172,6 +172,7 @@ var buttonCSS = {
 })();
 
 function getRequest(transmission, torrentURL) {
+    torrentURL = encodeURI(torrentURL)
     if (transmission.download_path === null) {
         return {
             arguments: { cookies: getCookie(), filename: torrentURL },
