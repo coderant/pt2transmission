@@ -5,7 +5,7 @@
 // @author convexshiba
 // @icon https://media.giphy.com/media/cInsPcO4MijtwP1FMS/giphy.gif
 // @license https://raw.githubusercontent.com/convexshiba/down2transmission/master/LICENSE
-// @version 1.7
+// @version 1.8
 // @description Add a button in torrent sites to support adding torrent to Transmission directly.
 // @supportURL https://github.com/convexshiba/down2transmission
 // @updateURL https://raw.githubusercontent.com/convexshiba/down2transmission/master/js/down2transmission.js
@@ -49,6 +49,14 @@ var transmissions = [
 // Can be found in direct download rss.
 var ipt_torrent_pass = "Can be found in direct download rss";
 
+// Below is optional
+
+// Useful when your transmission is hidden behind an authentication layer/reverse proxy
+var custom_header = {
+    // "CF-Access-Client-Id": "client_id_example",
+    // "CF-Access-Client-Secret": "client_secret_example"
+}
+
 // DO NOT EDIT BELOW.
 
 // server_name: name of the button
@@ -67,7 +75,7 @@ function Transmission(server_name, url, port, rpc_bind_address, download_dir, us
     this.pw = pw;
     this.download_dir = download_dir;
     this.rpc_url = function () {
-        return "http://" + this.username + ":" + this.pw + "@" + this.url + ":" + this.port + this.rpc_bind_address + "rpc";
+        return "https://" + this.username + ":" + this.pw + "@" + this.url + ":" + this.port + this.rpc_bind_address + "rpc";
     };
 }
 
@@ -406,15 +414,15 @@ function addTorrent(transmission, button, result, request, sessionId, tries) {
         );
         return;
     }
-    console.log("sending torrent with sessionid: (" + sessionId);
+    console.log("sending torrent with sessionid: ->" + sessionId);
     console.log("sending: " + JSON.stringify(request));
     GM_xmlhttpRequest({
         method: "POST",
         url: transmission.rpc_url(),
         data: JSON.stringify(request),
-        headers: {
+        headers: Object.assign({}, custom_header, {
             "X-Transmission-Session-Id": sessionId,
-        },
+        }),
         onload: function (response) {
             console.log(
                 "Got response:\n" +
@@ -508,4 +516,5 @@ function getCookie() {
     sCookie = sCookie.replace(/;\s+$/, "");
     return sCookie;
 }
+
 
